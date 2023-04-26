@@ -88,6 +88,7 @@ class Game():
                 pair[1].add_potential(pair[0])
 
     def is_pair_perfect(self, pair):
+        """ returns True if pair is a perfect pair """
 
         if pair in self.perfect_pairs or (pair[1],pair[0]) in self.perfect_pairs:
             return True
@@ -95,7 +96,7 @@ class Game():
             return False
 
     def check_pair(self, pair):
-        """ Returns True if pair is a perfect pair """
+        """ chekcs if pair is a perfect pair and adjust additional information"""
 
         if self.is_pair_perfect(pair):
             
@@ -191,7 +192,7 @@ class Game():
                         pairs_made += 1
                         break
         
-        # randmoizes remaining pairs
+        # randomizes remaining pairs
         pairs.extend(self.set_pairs(num_pairs - pairs_made, contestant_copy))
 
         return pairs
@@ -216,7 +217,7 @@ if __name__ == "__main__":
         total_weeks = 0 # number of week across all trials
         most_weeks = 0 # maximum number of week for a single trial
 
-        for i in range(100):
+        for i in range(1000):
 
             names = ["Bob", "John", "Mary", "Rick", "Emma", "Ana", "Harry", "Meredith",
                          "Perry", "Rita", "Derek", "Paula", "Arthur", "Peter", "Lina", "Samantha"]
@@ -228,7 +229,7 @@ if __name__ == "__main__":
                 most_weeks = weeks
             total_weeks += weeks
 
-        results.append((total_weeks/100, most_weeks))
+        results.append((total_weeks/1000, most_weeks))
         
     # prints out results
     print("Average number of weeks for Auto Solve: " + str(results[0][0]))

@@ -1,8 +1,6 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.lines as mlines
-import matplotlib.axes as axes
 
 class Contestant():
     """ Creates a contestant in the matchmaking game """

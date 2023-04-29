@@ -1,4 +1,8 @@
 import random
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+import matplotlib.axes as axes
 
 class Contestant():
     """ Creates a contestant in the matchmaking game """
@@ -205,17 +209,48 @@ class Game():
         """ Pairs are randomly set, but guesses are selected based on potential matches """
         return self.comp_solve(week)
 
+class Histogram:
+    """ Displays data as a histogram """
+
+    def create(datasets):
+        """ creates a histogram that compares the different datasets in one graph """
+        
+        # color for a given method
+        current_color = 0
+
+        # cycles through the data for each method
+        for data in datasets:
+
+            # creates histogram
+            plt.hist(data[0], label = data[1], alpha = .60, bins = [5*x for x in range(30)])
+            # creates median line
+            plt.axvline(np.median(data[0]), linestyle = "dashed", alpha = .75, color = "C" + str(current_color))
+            current_color += 1 # changes color for next set of data
+            
+        # labels the medians
+        plt.text(np.median(datasets[0][0]) + 2, 290, np.median(datasets[0][0]), alpha = .75, color = "k")
+        plt.text(np.median(datasets[1][0]) + 2, 290, np.median(datasets[1][0]), alpha = .75, color = "k")
+        plt.text(np.median(datasets[2][0]) - 13, 290, np.median(datasets[2][0]), alpha = .75, color = "k")
+
+        # labels the graph and its axes
+        plt.title("Comparison of Various Algorithms To Solve the Game")
+        plt.xlabel("Number of Weeks To Solve the Game")
+        plt.ylabel("Frequency Out of 1000 Trials")
+
+        # creates a legend
+        plt.legend(loc="upper right")
+
+        plt.show()
+
 if __name__ == "__main__":
     # checks that random_solve takes a lot longer than auto_solve
 
     solving_methods = [Game.auto_solve, Game.random_solve, Game.smart_solve]
-    results = []
+
+    data_dict = {Game.auto_solve: [], Game.random_solve: [], Game.smart_solve: []}
 
     # cycles through each method
     for method in solving_methods:
-
-        total_weeks = 0 # number of week across all trials
-        most_weeks = 0 # maximum number of week for a single trial
 
         for i in range(1000):
 
@@ -225,18 +260,11 @@ if __name__ == "__main__":
 
             weeks = method(game)
 
-            if weeks > most_weeks:
-                most_weeks = weeks
-            total_weeks += weeks
-
-        results.append((total_weeks/1000, most_weeks))
+            data_dict[method].append(weeks)
         
-    # prints out results
-    print("Average number of weeks for Auto Solve: " + str(results[0][0]))
-    print(str(results[0][1]) + " was the maximum number of weeks to solve with Auto Solve")
-    
-    print("Average number of weeks for Random Solve: " + str(results[1][0]))
-    print(str(results[1][1]) + " was the maximum number of weeks to solve with Random Solve")
+    # displays results as a histogram
+    auto_data = (data_dict[Game.auto_solve], "Auto Solve")
+    random_data = (data_dict[Game.random_solve], "Random Solve")
+    smart_data = (data_dict[Game.smart_solve], "Smart Solve")
 
-    print("Average number of weeks for Smart Solve: " + str(results[2][0]))
-    print(str(results[2][1]) + " was the maximum number of weeks to solve with Smart Solve")
+    Histogram.create([auto_data, random_data, smart_data])
